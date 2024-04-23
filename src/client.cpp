@@ -24,7 +24,7 @@ std::string Client::sign(const std::string &txt) const {
     return crypto::signMessage(private_key, txt);
 }
 
-bool Client::transfer_money(const std::string& receiver, double value) const {
+bool Client::transfer_money(const std::string &receiver, double value) const {
     if (server->get_client(receiver) == nullptr) {
         return false;
     }

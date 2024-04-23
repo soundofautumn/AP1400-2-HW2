@@ -9,8 +9,7 @@ Server::Server() = default;
 std::shared_ptr<Client> Server::add_client(std::string id) const {
     static std::random_device rd;
     static std::mt19937 g(rd());
-
-    for (auto &[client, _]: clients) {
+    for (const auto &[client, _]: clients) {
         if (client->get_id() == id) {
             id += std::to_string(g() % 10000);
         }
@@ -21,7 +20,7 @@ std::shared_ptr<Client> Server::add_client(std::string id) const {
 }
 
 std::shared_ptr<Client> Server::get_client(const std::string &id) const {
-    for (auto &[client, _]: clients) {
+    for (const auto &[client, _]: clients) {
         if (client->get_id() == id) {
             return client;
         }
@@ -67,9 +66,7 @@ size_t Server::mine() {
         for (auto &[client, _]: clients) {
             const size_t nonce = client->generate_nonce();
             const std::string sha256 = crypto::sha256(mempool + std::to_string(nonce));
-            if (sha256[0] == '0' &&
-                sha256[1] == '0' &&
-                sha256[2] == '0') {
+            if (sha256.substr(0, 10).find("000") != std::string::npos) {
                 for (const auto &trx: pending_trxs) {
                     std::string sender, receiver;
                     double value;
